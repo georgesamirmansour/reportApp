@@ -35,9 +35,13 @@ public final class QueryUtils {
         }
 
         try {
-            JSONObject baseJsonObject = new JSONObject(earthquakeJSON);
+            String jsonResult = fetchEarthquakeData(earthquakeJSON);
+
+            JSONObject baseJsonObject = new JSONObject(jsonResult);
             JSONArray featuresArray = baseJsonObject.getJSONArray("features");
-            for (int i = 0; featuresArray.length() > i; i++) {
+
+            for (int i = 0; i < featuresArray.length(); i++) {
+
                 JSONObject firstFeature = featuresArray.getJSONObject(i);
                 JSONObject properties = firstFeature.getJSONObject("properties");
                 String magnitude = properties.getString("mag");
@@ -51,7 +55,7 @@ public final class QueryUtils {
         return earthquakeArrayList;
     }
 
-    public static ArrayList<Earthquake> fetchEarthquakeData(String requestUrls) {
+    public static String fetchEarthquakeData(String requestUrls) {
         URL url = createUrl(requestUrls);
         String jsonResponse = null;
         try {
@@ -59,7 +63,7 @@ public final class QueryUtils {
         } catch (IOException e) {
             Log.e(LOG_TAG, "error closing input stream: ", e);
         }
-        return extractEarthquakeFeatures(jsonResponse);
+        return jsonResponse;
     }
 
     private static URL createUrl(String stringUrls) {

@@ -1,10 +1,9 @@
 package com.example.gogos.reportapp;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -27,13 +26,16 @@ public class EarthquakeActivity extends AppCompatActivity {
         @Override
         protected ArrayList<Earthquake> doInBackground(String... urls) {
 
-            earthquakesArrayList = QueryUtils.fetchEarthquakeData(urls[0]);
+            earthquakesArrayList = QueryUtils.extractEarthquakeFeatures(urls[0]);
             return earthquakesArrayList;
         }
 
-        protected void onPostExecute(Earthquake result) {
+        @Override
+        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
+            super.onPostExecute(earthquakes);
+
             EarthquakeAdaptor earthquakeAdaptor = new EarthquakeAdaptor(getApplicationContext(), earthquakesArrayList);
-            ListView listView = (ListView) findViewById(R.id.list);
+            ListView listView = findViewById(R.id.list);
             listView.setAdapter(earthquakeAdaptor);
         }
     }
